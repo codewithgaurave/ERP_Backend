@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
+    "seed:admin": "node scripts/seedAdmin.js",
     "build": "echo \"Build skipped\""
   },
   "author": "Abhay Vishwakarma",

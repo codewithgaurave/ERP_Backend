@@ -24,10 +24,13 @@ const sendTokenResponse = (user, statusCode, res) => {
     success: true,
     token,
     user: {
-      id: user._id,
+      _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+      salary: user.salary,
+      status: user.status,
+      lastLogin: user.lastLogin,
     },
   });
 };
@@ -52,7 +55,7 @@ export const login = async (req, res) => {
     }
 
     // 3. Status check
-    if (!user.isActive) {
+    if (!user.status) {
       return res.status(401).json({ success: false, message: "Your account is deactivated" });
     }
 
@@ -96,7 +99,15 @@ export const getMe = async (req, res) => {
   const user = await User.findById(req.user.id);
   res.status(200).json({
     success: true,
-    data: user,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      salary: user.salary,
+      status: user.status,
+      lastLogin: user.lastLogin,
+    },
   });
 };
 

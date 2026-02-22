@@ -4,16 +4,20 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { dbConnect } from './config/db.js'
 import authRoutes from './routes/auth.route.js'
+import userRoutes from './routes/user.route.js'
+import taskRoutes from './routes/task.route.js'
+import payrollRoutes from './routes/payroll.route.js'
+import inventoryRoutes from './routes/inventory.route.js'
+import { startTaskScheduler } from './utils/taskScheduler.js'
 
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 4001
 
-// Connect to Database
 dbConnect()
+startTaskScheduler()
 
-// Middlewares
 app.use(express.json())
 app.use(cors({
   origin: process.env.FRONTEND_URL || "http://localhost:5173",
@@ -21,20 +25,18 @@ app.use(cors({
 }))
 app.use(cookieParser())
 
-// Welcome route
 app.get('/', (req, res) => {
   res.json({ message: "ERP System Backend API is running..." })
 })
 
-// Mount Routes
-app.use('/auth', authRoutes)
+app.use('/api/auth', authRoutes)
+app.use('/api/users', userRoutes)
+app.use('/api/tasks', taskRoutes)
+app.use('/api/payroll', payrollRoutes)
+app.use('/api/inventory', inventoryRoutes)
 
-// 404 Handler
 app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found',
-  })
+  res.status(404).json({ success: false, message: 'Route not found' })
 })
 
 app.listen(port, () => {

@@ -23,12 +23,20 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "hr", "manager", "employee", "inventory"],
-      default: "employee",
+      enum: ["ADMIN", "HR", "MANAGER", "EMPLOYEE", "INVENTORY"],
+      default: "EMPLOYEE",
     },
-    isActive: {
+    salary: {
+      type: Number,
+      default: 0,
+    },
+    status: {
       type: Boolean,
       default: true,
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
     lastLogin: {
       type: Date,
@@ -38,12 +46,11 @@ const userSchema = new mongoose.Schema(
 );
 
 // STEP 2 — Password Hashing before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
 // Compare Password method
