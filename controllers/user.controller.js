@@ -3,24 +3,28 @@ import { User } from "../models/User.model.js";
 // Create User (Admin only)
 export const createUser = async (req, res) => {
   try {
-    const { name, email, password, role, salary } = req.body;
+    const { name, email, password, role, salary, status } = req.body;
 
     // Restriction: ADMIN cannot create another ADMIN
-    if (req.user.role === "ADMIN" && role === "ADMIN") {
+    const userRole = req.user.role ? req.user.role.toUpperCase() : "";
+    const targetRole = role ? role.toUpperCase() : "";
+
+    if (userRole === "ADMIN" && targetRole === "ADMIN") {
       return res.status(403).json({ success: false, message: "You are not authorized to create an Admin user" });
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ success: false, message: "User already exists" });
+      return res.status(400).json({ success: false, message: "User already exists with this email" });
     }
-
+        
     const user = await User.create({
       name,
       email,
       password,
       role,
       salary,
+      status: status !== undefined ? status : true,
       createdBy: req.user._id
     });
     const userResponse = user.toObject();
@@ -28,6 +32,10 @@ export const createUser = async (req, res) => {
 
     res.status(201).json({ success: true, message: "User created successfully", user: userResponse });
   } catch (error) {
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(val => val.message);
+      return res.status(400).json({ success: false, message: messages.join(', ') });
+    }
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -116,10 +124,10 @@ export const getUserById = async (req, res) => {
 // Update User
 export const updateUser = async (req, res) => {
   try {
-    const { name, role, salary, status } = req.body;
+    const { name, email, role, salary, status } = req.body;
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { name, role, salary, status },
+      { name, email, role, salary, status },
       { new: true, runValidators: true }
     ).select("-password");
 

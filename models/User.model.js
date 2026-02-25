@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["ADMIN", "HR", "MANAGER", "EMPLOYEE", "INVENTORY"],
       default: "EMPLOYEE",
+      uppercase: true,
     },
     salary: {
       type: Number,

@@ -41,25 +41,32 @@ export const getMyTasks = async (req, res) => {
   }
 };
 
-// Update Task Status
-export const updateTaskStatus = async (req, res) => {
+// Update Task
+export const updateTask = async (req, res) => {
   try {
-    const { status } = req.body;
+    const { title, description, assignedTo, deadline, status } = req.body;
     const task = await Task.findById(req.params.id);
 
     if (!task) {
       return res.status(404).json({ success: false, message: "Task not found" });
     }
 
-    // Check if task is late
-    if (status === "DONE" && new Date() > new Date(task.deadline)) {
-      task.status = "LATE";
-    } else {
-      task.status = status;
-    }
+    if (title) task.title = title;
+    if (description) task.description = description;
+    if (assignedTo) task.assignedTo = assignedTo;
+    if (deadline) task.deadline = deadline;
 
-    if (status === "DONE" || status === "LATE") {
-      task.completedAt = new Date();
+    if (status) {
+      // Check if task is late
+      if (status === "DONE" && new Date() > new Date(task.deadline)) {
+        task.status = "LATE";
+      } else {
+        task.status = status;
+      }
+
+      if (status === "DONE" || status === "LATE") {
+        task.completedAt = new Date();
+      }
     }
 
     await task.save();

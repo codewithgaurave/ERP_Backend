@@ -124,7 +124,7 @@ export const createFirstAdmin = async (req, res) => {
       name,
       email,
       password,
-      role: "admin",
+      role: "ADMIN",
     });
 
     sendTokenResponse(admin, 201, res);

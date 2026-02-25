@@ -4,7 +4,10 @@ export const checkRole = (...allowedRoles) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    if (!allowedRoles.includes(req.user.role)) {
+    const userRole = req.user.role ? req.user.role.toUpperCase() : "";
+    const normalizedAllowedRoles = allowedRoles.map((r) => r.toUpperCase());
+
+    if (!normalizedAllowedRoles.includes(userRole)) {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
