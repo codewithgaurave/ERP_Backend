@@ -266,3 +266,39 @@ npm start
 - Complete documentation
 
 **Ab frontend bana le aur deploy kar de! 🚀**
+1. Project Ki Buniyad (Architecture)
+Ye system do parts mein divided hai:
+
+Backend (The Brain): Node.js aur Express par chalta hai. Ye saara data process krta hai, security manage krta hai aur calculations (jaise salary deduction) krta hai.
+Frontend (The Interface): React aur Tailwind CSS par bana hai. Ye users ko ek premium dashboard aur controls provide krta hai.
+2. Modules Ka Breakdown (Step-by-Step)
+A. User Management (The Central Hub)
+Ye project ka sabse important part hai kyunki baaki saare modules isi se Jude hain.
+
+Roles: Isme 5 types ke roles hain: ADMIN, HR, MANAGER, EMPLOYEE, INVENTORY Manager.
+Kaam: ADMIN naye employees create krta hai, unki basic salary set krta hai aur unka status (Active/Inactive) manage krta hai.
+Connectivity: Har Task, Payroll record aur Inventory log kisi na kisi User ID se juda hota hai.
+B. Task Management (The Workflow)
+Ye company ka daily kaam manage krta hai.
+
+Kaam: ADMIN ya MANAGER kisi EMPLOYEE ko task assign krte hain aur ek Deadline set krte hain.
+Automation: Isme ek "Task Scheduler" laga hai jo 24/7 chalta hai. Agar koi employee deadline ke baad task complete krta hai, toh system use automatic LATE mark kr deta hai.
+C. Payroll System (The Payment Logic)
+Ye employees ki salary calculate krta hai.
+
+Connectivity with Tasks: Ye module Task Management se connected hai.
+Logic: Jab HR salary generate krta hai, toh system check krta hai ki us employee ne us mahine kitne LATE tasks kiye hain.
+Example: Har late task par ₹500 ka deduction hota hai.
+Final Salary = Basic Salary + Bonus - Deductions (Late Tasks).
+D. Inventory Management (The Asset Tracker)
+Ye company ke saamaan (Laptops, Mouse, Chairs, etc.) ko track krta hai.
+
+Issue/Return: INVENTORY Manager kisi employee ko saamaan Issue kr skta hai (jis se stock kam ho jata hai) aur jab wo wapas kre toh Return mark kr skta hai.
+Connectivity: Har Issue/Return ka ek Permanent Log banta hai jis se ye pata rehta hai ki kaun sa saamaan kis employee ke paas hai.
+3. Ye Modules Aapas Mein Kaise Connect Hain? (A Simple Example)
+Step 1: ADMIN ne ek Employee banaya (User Module).
+Step 2: MANAGER ne us employee ko ek project diya (Task Module).
+Step 3: Employee ko kaam krne ke liye ek Laptop diya gaya (Inventory Module).
+Step 4: Employee ne kaam deadline ke baad finish kiya (Task Module marks it LATE).
+Step 5: Month end par HR ne salary nikali. System ne dekha 1 late task hai, toh ₹500 kaat kr final salary di (Payroll Module).
+Step 6: Employee ne company chhodi toh Laptop wapas kr diya (Inventory Module wapas stock badha deta hai).

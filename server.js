@@ -8,6 +8,7 @@ import userRoutes from './routes/user.route.js'
 import taskRoutes from './routes/task.route.js'
 import payrollRoutes from './routes/payroll.route.js'
 import inventoryRoutes from './routes/inventory.route.js'
+import dashboardRoutes from './routes/dashboard.route.js'
 import { startTaskScheduler } from './utils/taskScheduler.js'
 
 dotenv.config()
@@ -34,6 +35,7 @@ app.use('/api/users', userRoutes)
 app.use('/api/tasks', taskRoutes)
 app.use('/api/payroll', payrollRoutes)
 app.use('/api/inventory', inventoryRoutes)
+app.use('/api/dashboard', dashboardRoutes)
 
 app.use((req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' })
